@@ -1,0 +1,61 @@
+﻿@page "/"
+@inject IStateService StateService
+@inject IUserAccountService UserAccountService
+@rendermode InteractiveServer
+<PageTitle>PetStore</PageTitle>
+
+
+<div class="container mb-5">
+    <div class="text-center mt-5 ">
+
+        <img src="HeroPuppies.jpg" alt="PetStore Image" class="img-fluid" style="max-width: 100%; height: auto;" />
+        <h1 class="display-2 mt-3">Pet Store</h1>
+        <h1 class="display- mt-3">Your new family member is only a click away!</h1>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-8 offset-md-2">
+            <p class="lead">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
+            </p>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <img src="pup2.jpg" class="card-img-top" alt="PetStore Image" style="max-width: 100%; height: auto;">
+                        <div class="card-body">
+                            <h2 class="card-title">Our Dogs</h2>
+                            <p class="card-text">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.
+                                Sed tristique aliquet magna, vel dignissim nulla eleifend a.
+                                Vivamus at sapien sit amet ex commodo feugiat.
+                                Phasellus volutpat tortor eu mauris congue, sit amet vestibulum velit tincidunt.
+                            </p>
+                            <a href="/dogs" class="btn btn-primary">Go To Dogs</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="card">
+                                <img src="HeroKitten.jpg" class="card-img-top" alt="PetStore Image" style="max-width: 100%; height: auto;">
+                                <div class="card-body">
+                                    <h2 class="card-title">Our Cats </h2>
+                                    <p class="card-text">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi.
+                                        Sed tristique aliquet magna, vel dignissim nulla eleifend a.
+                                        Vivamus at sapien sit amet ex commodo feugiat.
+                                        Phasellus volutpat tortor eu mauris congue, sit amet vestibulum velit tincidunt.
+                                    </p>
+                                    <a href="/cats" class="btn btn-primary">Go To Cats</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

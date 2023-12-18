@@ -1,0 +1,79 @@
+﻿@inject IStateService StateService
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IUserAccountService UserAccountService
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="">
+            <img type="image/jpg" src="PetShopLogo.jpg" alt="PetStore Logo" height="40" width="40" /> Pet Store
+        </a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All" @onclick="RefreshNavBar">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="cart">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Cart
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Dogs">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Dogs
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="Cats">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Cats
+            </NavLink>
+        </div>
+
+        @if (StateService.IsAdmin == true)
+        {
+            
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="availablepets">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Available Pets
+            </NavLink>
+        </div>
+        }
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="account">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Account
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="about">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> About
+            </NavLink>
+        </div>
+
+    </nav>
+</div>
+
+
+
+@code {
+
+    private void RefreshNavBar()
+    {
+      
+        if (StateService != null)
+        {
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,49 @@
+﻿@page "/history"
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject IPetService PetService
+@inject IStateService StateService
+@inject IUserAccountService UserAccountService
+@attribute [StreamRendering]
+
+<h3>Purchase History</h3>
+@if (historyItems != null && historyItems.Any())
+{
+    <div class="list-group">
+        @foreach (var pet in historyItems)
+        {
+            <div class="list-group-item">
+                <h5 class="mb-1">@pet.Type</h5>
+                <p class="mb-1">Breed: @pet.Breed</p>
+                <p class="mb-1">Age: @pet.Age</p>
+                <p class="mb-1">Price: @pet.Price</p>
+            </div>
+        }
+    </div>
+    <br />
+    <br />
+}
+else
+{
+    <p>Your Shopping history is empty.</p>
+}
+
+
+@code {
+    private List<Pet> historyItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userId = StateService.UserId;
+
+        if (userId != null)
+        {
+            var user = await UserAccountService.GetUserAccountById(userId);
+
+            if (!string.IsNullOrEmpty(user?.History))
+            {
+                historyItems = JsonSerializer.Deserialize<List<Pet>>(user.History);
+            }
+        }
+    }
+}

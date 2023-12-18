@@ -1,0 +1,113 @@
+﻿ @page "/deletePets"
+@page "/deletePets/{id:int}"
+@inject IPetService PetService
+@inject IUserAccountService UserAccountService
+
+@inject IStateService StateService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+
+<h3>Delete Pet from Database</h3>
+
+@if (showConfirmationModal)
+{
+    <div class="modal fade show" id="confirmationModal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                    <button type="button" class="btn-close" @onclick="CloseConfirmationModal"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseConfirmationModal">Cancel</button>
+                    <button type="button" class="btn btn-danger" @onclick="DeletePet">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (pet != null)
+{
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">
+                <label class="fw-bold">Type:</label>
+                <span>@pet.Type</span>
+                <br />
+
+                <label class="fw-bold">Breed:</label>
+                <span>@pet.Breed</span>
+                <br />
+
+                <label class="fw-bold">Age:</label>
+                <span>@pet.Age</span>
+                <br />
+
+                <label class="fw-bold">Date Available:</label>
+                <span>@pet.DateAvailable</span>
+                <br />
+
+                <label class="fw-bold">Price:</label>
+                <span>@pet.Price</span>
+                <br />
+
+                <label class="fw-bold">Name:</label>
+                <span>@pet.Name</span>
+                <br />
+
+                <label class="fw-bold">Image URL:</label>
+                <span>@pet.ImgURL</span>
+                <br />
+            </p>
+            <button type="button" class="btn btn-danger" @onclick="ShowConfirmationModal">Delete</button>
+        </div>
+    </div>
+}
+else
+{
+    <p>No pet selected</p>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    Pet pet { get; set; } = new Pet { Type = string.Empty, Breed = string.Empty, Age = 0, DateAvailable = string.Empty, Price = 0, Name = string.Empty, ImgURL = string.Empty };
+
+    private bool showConfirmationModal = false;
+
+    private void ShowConfirmationModal()
+    {
+        showConfirmationModal = true;
+    }
+
+    private async Task DeletePet()
+    {
+        if (showConfirmationModal) 
+        {
+            await PetService.DeletePet(Id);
+            CloseConfirmationModal(); 
+            NavigationManager.NavigateTo("/availablePets");
+        }
+    }
+
+    private void CloseConfirmationModal()
+    {
+        showConfirmationModal = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        pet = await PetService.GetPetById(Id);
+    }
+}
+
+
+

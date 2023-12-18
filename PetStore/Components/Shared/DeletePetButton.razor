@@ -1,0 +1,15 @@
+﻿@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject IStateService StateService
+<button @onclick="DeletePet" class="btn btn-danger">Delete Pet from Database</button>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    void DeletePet()
+    {
+        NavigationManager.NavigateTo($"/deletePets/{Id}");
+    }
+  
+}

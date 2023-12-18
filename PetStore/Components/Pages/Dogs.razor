@@ -1,0 +1,108 @@
+﻿@page "/dogs"
+@inject IPetService PetService
+@inject IStateService StateService
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@inject IUserAccountService UserAccountService
+
+
+<h3>Dogs</h3>
+
+
+@if (petsJson == null)
+{
+    <span>Loading...</span>
+}
+else if (petsJson == "[]")
+{
+    <span>No pets available</span>
+}
+else
+{
+    var pets = JsonSerializer.Deserialize<List<Pet>>(petsJson);
+    @foreach (var pet in pets)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@pet.Type</h5>
+                <p class="card-text">@pet.Breed</p>
+                <p class="card-text">Age: @pet.Age</p>
+                <p class="card-text">Available: @pet.DateAvailable</p>
+                <p class="card-text">Price: @pet.Price</p>
+            </div>
+            <button @onclick="() => AddToCart(pet.Id, pet)" class="btn btn-primary">Add Pet To Cart</button>
+
+        </div>
+        <br />
+    }
+}
+
+@if (showConfirmationModal)
+{
+    <div class="modal fade show" id="confirmationModal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                    <button type="button" class="btn-close" @onclick="CloseConfirmationModal"></button>
+                </div>
+                <div class="modal-body">
+                    @modalMessage
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="CloseConfirmationModal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    string petsJson = null;
+    bool showConfirmationModal = false;
+    string modalMessage = string.Empty;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var pets = await PetService.GetAllDogs();
+        petsJson = JsonSerializer.Serialize(pets);
+    }
+
+    private async Task AddToCart(int petId, Pet pet)
+    {
+        var user = await UserAccountService.GetUserAccountById(StateService.UserId);
+
+        if (user != null)
+        {
+            if (user.Cart == null)
+            {
+                user.Cart = "[]";
+
+                var cartItems = JsonSerializer.Deserialize<List<Pet>>(user.Cart);
+
+
+                cartItems.Add(pet);
+
+
+                user.Cart = JsonSerializer.Serialize(cartItems);
+
+                var success = await UserAccountService.UpdateAccount(user);
+                if (success)
+                {
+                    modalMessage = "The pet has been added to your cart!";
+                    showConfirmationModal = true;
+                }
+                else
+                {
+                    modalMessage = "There was an error adding the pet to your cart.";
+                    showConfirmationModal = true;
+                }
+            }
+        }
+    }
+    private void CloseConfirmationModal()
+    {
+        showConfirmationModal = false;
+    }
+}

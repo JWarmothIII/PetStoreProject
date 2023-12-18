@@ -1,0 +1,15 @@
+﻿@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject IStateService StateService
+<button @onclick="UpdatePet" class="btn btn-primary">Update Pet in Database</button>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    void UpdatePet()
+    {
+        NavigationManager.NavigateTo($"/updatepets/{Id}");
+    }
+  
+}

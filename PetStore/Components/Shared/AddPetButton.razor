@@ -1,0 +1,13 @@
+﻿@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject IStateService StateService
+@inject IUserAccountService UserAccountService
+
+<button @onclick="AddPet" class="btn btn-primary">Add Pet To database</button>
+
+@code {
+    void AddPet()
+    {
+        NavigationManager.NavigateTo("/Addpets");
+    }
+}

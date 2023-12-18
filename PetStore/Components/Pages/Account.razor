@@ -1,0 +1,38 @@
+﻿@page "/account"
+@inject IStateService StateService
+@inject IUserAccountService UserAccountService
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<div class="container d-flex justify-content-center align-items-center text-center">
+    <div class="card p-4" style="width: 400px;">
+        <h2 class="text-center mb-4">Account</h2>
+
+
+
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec eros ut nulla sodales condimentum. Nulla facilisi. Curabitur rutrum tortor eu magna ultrices ullamcorper. Vestibulum auctor, neque eget feugiat molestie, nisi odio fermentum metus, eu varius nisl libero sed sapien.
+        </p>
+        <p>
+            Donec dapibus hendrerit turpis, vitae faucibus libero laoreet vitae. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In ut vehicula dolor.
+        </p>
+        <p>
+            Fusce at risus vitae leo tincidunt malesuada vel nec purus. Phasellus tincidunt augue a quam eleifend, at egestas enim convallis.
+        </p>
+        <button class="btn btn-primary"@onclick="GoToLogin">Login</button><br />
+        <button class="btn btn-primary" @onclick="GotToCart">Cart</button><br />
+        <button class="btn btn-primary" @onclick="GotToHistory">Purchase History</button><br />
+
+    </div>
+</div>
+
+@code {
+    void GoToLogin() => NavigationManager.NavigateTo("/login");
+
+
+
+    void GotToCart()=> NavigationManager.NavigateTo("/cart");
+
+    void GotToHistory() => NavigationManager.NavigateTo("/history");
+
+}

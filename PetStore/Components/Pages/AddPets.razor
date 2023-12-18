@@ -1,0 +1,101 @@
+﻿ @page "/addpets"
+@page "/addpets/{id:int}"
+@inject IPetService PetService
+@inject IStateService StateService
+@inject IUserAccountService UserAccountService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+
+<EditForm Model="pet" OnSubmit="HandleSubmit" FormName="addPet">
+    <h3>Add Pets to database</h3>
+    <div class="mb-3">
+        <label for="Type" class="form-label">Type</label>
+        <select @bind="pet.Type" class="form-select">
+            <option value="Cat">Cat</option>
+            <option value="Dog">Dog</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="Breed" class="form-label">Breed</label>
+        <InputText @bind-Value="pet.Breed" class="form-control"></InputText>
+    </div>
+
+    <div class="mb-3">
+        <label for="Age" class="form-label">Age</label>
+        <InputNumber @bind-Value="pet.Age" class="form-control"></InputNumber>
+    </div>
+
+    <div class="mb-3">
+        <label for="DateAvailable" class="form-label">Date Available</label>
+        <InputText @bind-Value="pet.DateAvailable" class="form-control"></InputText>
+    </div>
+
+    <div class="mb-3">
+        <label for="Price" class="form-label">Price</label>
+        <InputNumber @bind-Value="pet.Price" class="form-control"></InputNumber>
+    </div>
+
+    <div class="mb-3">
+        <label for="Name" class="form-label">Name</label>
+        <InputText @bind-Value="pet.Name" class="form-control"></InputText>
+    </div>
+
+    <div class="mb-3">
+        <label for="ImgURL" class="form-label">Image URL</label>
+        <InputText @bind-Value="pet.ImgURL" class="form-control"></InputText>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+@if (showConfirmationModal)
+{
+
+    <div class="modal fade show" id="confirmationModal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                    <button type="button" class="btn-close" @onclick="CloseConfirmationModal"></button>
+                </div>
+                <div class="modal-body">
+                    The pet has been added!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="ReturnToAvailablePets">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    private bool showConfirmationModal = false;
+    [Parameter]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    Pet pet { get; set; } = new Pet { Type = string.Empty, Breed = string.Empty, Age = 0, DateAvailable = string.Empty, Price = 0, Name = string.Empty, ImgURL = string.Empty };
+    
+    private async Task HandleSubmit()
+    {
+        await PetService.AddPet(pet);
+        showConfirmationModal = true;
+    }
+
+    private void CloseConfirmationModal()
+    {
+        showConfirmationModal = false;
+    }
+
+    private void ReturnToAvailablePets()
+    {
+        showConfirmationModal = false;
+        NavigationManager.NavigateTo("/availablePets");
+    }
+    }
+
+
+

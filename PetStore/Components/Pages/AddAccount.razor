@@ -1,0 +1,133 @@
+﻿@page "/addaccount"
+@inject IStateService StateService
+@inject IUserAccountService UserAccountService
+@rendermode InteractiveServer
+
+
+
+<EditForm Model="userAccount" OnSubmit="HandleSubmit" FormName="addAccount">
+    <div class="container w-75">
+
+
+        <h3>Create a new account</h3>
+        <div class="row mb-3">
+            <label for="Email" class="col-sm-2 col-form-label">Email<br /></label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="userAccount.Email" class="form-control"></InputText>
+                <span class="text-danger">@errorMessageEmail</span>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="Password" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-10">
+                <InputText type="password" @bind-Value="userAccount.Password" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="ConfirmPassword" class="col-sm-2 col-form-label">Confirm Password</label>
+            <div class="col-sm-10">
+                <InputText type="password" @bind-Value="confirmPassword" class="form-control"></InputText>
+                <span class="text-danger">@errorMessagePassword</span>
+                <ValidationMessage For="@(() => userAccount.Password)"></ValidationMessage>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="FirstName" class="col-sm-2 col-form-label">First Name</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="userAccount.FirstName" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="LastName" class="col-sm-2 col-form-label">Last Name</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="userAccount.LastName" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="StreetAddress" class="col-sm-2 col-form-label">Street Address</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="userAccount.StreetAddress" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="City" class="col-sm-2 col-form-label">City</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="userAccount.City" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="State" class="col-sm-2 col-form-label">State</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="userAccount.State" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="ZipCode" class="col-sm-2 col-form-label">Zip Code</label>
+            <div class="col-sm-10">
+                <InputNumber @bind-Value="userAccount.ZipCode" class="form-control"></InputNumber>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="PhoneNumber" class="col-sm-2 col-form-label">Phone Number</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="userAccount.PhoneNumber" class="form-control" placeholder="(999) 999-9999"></InputText>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="Role" class="col-sm-2 col-form-label">Role</label>
+            <div class="col-sm-10">
+                <InputText @bind-Value="userAccount.Role" class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+    private string confirmPassword = string.Empty;
+    private string errorMessagePassword = string.Empty;
+    private string errorMessageEmail = string.Empty;
+
+    [SupplyParameterFromForm]
+    UserAccount userAccount { get; set; } = new UserAccount { Email = string.Empty, Password = string.Empty, FirstName = string.Empty, LastName = string.Empty, StreetAddress = string.Empty, City = string.Empty, State = string.Empty, ZipCode = 0, PhoneNumber = string.Empty, Role = string.Empty, History = string.Empty, Cart = string.Empty };
+
+    async Task HandleSubmit()
+    {
+
+        bool isEmailExists = await UserAccountService.CheckEmailExists(userAccount.Email);
+
+        if (isEmailExists)
+        {
+            errorMessageEmail = "There is already an account associated with this email";
+            return;
+        }
+
+        else if (userAccount.Password != confirmPassword)
+        {
+            errorMessagePassword = "Passwords must match";
+        }
+
+        else
+        {
+
+            await UserAccountService.AddUserAccount(userAccount);
+        }
+    }
+    }

@@ -1,0 +1,74 @@
+﻿@page "/availablepets"
+@inject IPetService PetService
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@inject IStateService StateService
+@inject IUserAccountService UserAccountService
+
+
+<h3>Available Pets</h3>
+
+<input type="text" @bind="searchText" placeholder="Search pets...">
+<button class="btn btn-primary" @onclick="SearchPets">Search</button>
+<AddPetButton />
+
+@if (pets == null)
+{
+    <span>Loading...</span>
+}
+else if (pets.Count == 0)
+{
+    <span>No pets available</span>
+}
+else
+{
+    @foreach (var pet in filteredPets)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@pet.Type</h5>
+                <p class="card-text">@pet.Breed</p>
+                <p class="card-text">Age: @pet.Age</p>
+                <p class="card-text">Available: @pet.DateAvailable</p>
+                <p class="card-text">Price: @pet.Price</p>
+            </div>
+            <div class="card-footer">
+                <UpdatePetButton Id="@pet.Id" />
+                <DeletePetButton Id="@pet.Id" />
+            </div>
+        </div>
+        <br />
+    }
+}
+
+@code {
+    List<Pet> pets = null;
+    List<Pet> filteredPets = new List<Pet>();
+    string searchText = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        pets = await PetService.GetAllPets();
+        filteredPets = pets;
+    }
+
+    private void SearchPets()
+    {
+        if (!string.IsNullOrWhiteSpace(searchText))
+        {
+            string searchLower = searchText.ToLower(); 
+
+            filteredPets = pets.Where(p =>
+                p.Type?.ToLower().Contains(searchLower) == true ||
+                p.Breed?.ToLower().Contains(searchLower) == true ||
+                p.Age.ToString().Contains(searchLower) ||
+                p.DateAvailable?.ToLower().Contains(searchLower) == true ||
+                p.Price.ToString().Contains(searchLower)
+            ).ToList();
+        }
+        else
+        {
+            filteredPets = pets;
+        }
+    }
+}
